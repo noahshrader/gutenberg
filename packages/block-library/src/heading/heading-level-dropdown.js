@@ -120,6 +120,9 @@ export default function HeadingLevelDropdown( {
 												__( 'Heading %d' ),
 												targetLevel
 										  ),
+									// Move tooltips above buttons so they don't overlap
+									// the help text below.
+									tooltipPosition: 'top',
 									isActive,
 									onClick() {
 										onChange( targetLevel );
