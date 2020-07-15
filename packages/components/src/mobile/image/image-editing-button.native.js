@@ -19,6 +19,7 @@ const ImageEditingButton = ( {
 	isSelected,
 	isUploadFailed,
 	isUploadInProgress,
+	onDelete,
 	onSelectMediaUploadOption,
 	openMediaOptions,
 	url,
@@ -28,9 +29,10 @@ const ImageEditingButton = ( {
 	}
 	return (
 		<MediaEdit
+			onDelete={ onDelete }
 			onSelect={ onSelectMediaUploadOption }
-			source={ { uri: url } }
 			openReplaceMediaOptions={ openMediaOptions }
+			source={ { uri: url } }
 			render={ ( { open, mediaOptions } ) => (
 				<TouchableWithoutFeedback onPress={ open }>
 					<View style={ styles.editContainer }>

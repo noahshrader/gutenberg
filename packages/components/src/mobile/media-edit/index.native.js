@@ -13,6 +13,7 @@ import {
 	requestMediaEditor,
 	mediaSources,
 } from '@wordpress/react-native-bridge';
+import { compact } from 'lodash';
 
 export const MEDIA_TYPE_IMAGE = 'image';
 
@@ -34,17 +35,29 @@ const replaceOption = {
 	icon: update,
 };
 
-const options = [ editOption, replaceOption ];
+const removeOption = {
+	id: 'removeOption',
+	label: __( 'Remove' ),
+	value: 'removeOption',
+	separated: true,
+};
 
 export class MediaEdit extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.onPickerPresent = this.onPickerPresent.bind( this );
 		this.onPickerSelect = this.onPickerSelect.bind( this );
+		this.getMediaOptionsItems = this.getMediaOptionsItems.bind( this );
 	}
 
 	getMediaOptionsItems() {
-		return options;
+		const { onDelete } = this.props;
+
+		return compact( [
+			editOption,
+			replaceOption,
+			onDelete && removeOption,
+		] );
 	}
 
 	onPickerPresent() {
@@ -54,7 +67,7 @@ export class MediaEdit extends React.Component {
 	}
 
 	onPickerSelect( value ) {
-		const { onSelect, multiple = false } = this.props;
+		const { onSelect, onDelete, multiple = false } = this.props;
 
 		switch ( value ) {
 			case MEDIA_EDITOR:
@@ -64,18 +77,24 @@ export class MediaEdit extends React.Component {
 					}
 				} );
 				break;
+			case removeOption.value:
+				onDelete();
+				break;
 			default:
 				this.props.openReplaceMediaOptions();
 		}
 	}
 
 	render() {
+		const options = this.getMediaOptionsItems();
+
 		const mediaOptions = () => (
 			<Picker
 				hideCancelButton
 				ref={ ( instance ) => ( this.picker = instance ) }
 				options={ this.getMediaOptionsItems() }
 				onChange={ this.onPickerSelect }
+				destructiveButtonIndex={ options.length }
 			/>
 		);
 
